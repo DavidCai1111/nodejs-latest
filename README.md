@@ -18,7 +18,7 @@ const { latest, latestLTS } = require('nodejs-latest')
 
 latest().then(console.log)
 // =>
-// { version: 'v6.4.0',
+// { version: '6.4.0',
 //   npm: '3.10.3',
 //   v8: '5.0.71.60',
 //   uv: '1.9.1',
@@ -29,7 +29,7 @@ latest().then(console.log)
 
 latestLTS().then(console.log)
 // =>
-// { version: 'v4.5.0',
+// { version: '4.5.0',
 //   npm: '2.15.9',
 //   v8: '4.5.103.37',
 //   uv: '1.9.1',

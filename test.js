@@ -10,7 +10,7 @@ describe('nodejs-latest', function () {
   it('get latest version', function * () {
     let latest = yield nodejsLatest.latest()
 
-    latest.version.startsWith('v').should.be.true()
+    latest.version.startsWith('v').should.be.false()
     latest.lts.should.be.false()
     String(parseInt(latest.modules)).should.equal(latest.modules)
   })
@@ -18,7 +18,7 @@ describe('nodejs-latest', function () {
   it('get latest lts version', function * () {
     let lts = yield nodejsLatest.latestLTS()
 
-    lts.version.startsWith('v').should.be.true()
+    lts.version.startsWith('v').should.be.false()
     ;(typeof lts.lts).should.equal('string')
     String(parseInt(lts.modules)).should.equal(lts.modules)
   })

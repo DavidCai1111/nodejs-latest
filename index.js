@@ -29,6 +29,7 @@ exports.latestLTS = function () {
 }
 
 function format (dist) {
+  if (dist.version.startsWith('v')) dist.version = dist.version.slice(1)
   if (dist.files) delete dist.files
   if (dist.date) delete dist.date
 

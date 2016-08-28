@@ -1,6 +1,6 @@
 {
   "name": "nodejs-latest",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Get the latest (LTS) node.js version and versions of its modules.",
   "main": "index.js",
   "scripts": {
