@@ -1,31 +1,33 @@
 'use strict'
-const exec = require('child_process').exec
+const https = require('https')
 
 const nodeDistUrl = 'https://nodejs.org/dist/index.json'
 let dists
 
-function getDists () {
-  if (dists) return Promise.resolve(dists)
+function request (url) {
+  return new Promise((resolve, reject) => {
+    const request = https.get(url, response => {
+      if (response.statusCode < 200 || response.statusCode > 299) {
+        return reject(new Error('Failed to load page, status code: ' + response.statusCode))
+      }
 
-  return new Promise(function (resolve, reject) {
-    exec(`curl ${nodeDistUrl}`, function (err, stdout, stderr) {
-      if (err) return reject(err)
-      let parsed = JSON.parse(stdout)
-
-      dists = parsed
-      return resolve(parsed)
+      let body = ''
+      response.on('data', chunk => { body += chunk })
+      response.on('end', () => resolve(body))
     })
+
+    request.on('error', reject)
   })
 }
 
-exports.latest = function () {
-  return getDists()
-    .then(function (dists) { return format(dists[0]) })
-}
+function getDists () {
+  if (dists) return Promise.resolve(dists)
 
-exports.latestLTS = function () {
-  return getDists()
-    .then(function (dists) { return format(dists.find((dist) => dist.lts)) })
+  return request(nodeDistUrl)
+    .then(result => {
+      dists = JSON.parse(result)
+      return dists
+    })
 }
 
 function format (dist) {
@@ -34,4 +36,15 @@ function format (dist) {
   if (dist.date) delete dist.date
 
   return dist
+}
+
+function getDist (fn) {
+  return () => getDists()
+    .then(fn)
+    .then(format)
+}
+
+module.exports = {
+  latest: getDist(dists => dists[0]),
+  latestLTS: getDist(dists => dists.find(dist => dist.lts))
 }
